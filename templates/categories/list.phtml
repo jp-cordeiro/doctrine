@@ -1,0 +1,32 @@
+<?php include_once __DIR__.'/../header.html';?>
+
+  <div class="container">
+    <div class="row">
+      <h1>Listagem de Categorias</h1>
+      <a class="btn btn-primary btn-large" href="/categories/create">Nova Categoria</a>
+      <table class="table">
+        <thead>
+        <tr>
+          <td>Id</td>
+          <td>Nome</td>
+          <td>Ações</td>
+        </tr>
+        </thead>
+
+        <tbody>
+        <?php foreach ($categories as $category):?>
+          <tr>
+            <td><?php echo $category->getId() ?></td>
+            <td><?php echo $category->getName() ?></td>
+            <td><?php echo "<a href='/categories/{$category->getId()}/edit' class=\"btn btn-success\">Editar</a>"; ?> |
+              <?php echo "<a href='/categories/{$category->getId()}/remove' class=\"btn btn-danger\">Excluir</a>"; ?></td>
+          </tr>
+        <?php endforeach;?>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+
+<?php include_once __DIR__.'/../footer.html';?>
