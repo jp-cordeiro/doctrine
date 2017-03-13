@@ -3,6 +3,7 @@ use App\Entity\Category;
 use App\Entity\Post;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response;
+
 $map->get('posts.list', '/posts', function ($request, $response) use ($view, $entityManager) {
     $repository = $entityManager->getRepository(Post::class);
     $posts = $repository->findAll();

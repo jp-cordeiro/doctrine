@@ -1,5 +1,7 @@
 <?php
 
+use App\Entity\Category;
+use App\Entity\Post;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Views\PhpRenderer;
 use Zend\Diactoros\Response;
@@ -28,8 +30,23 @@ $view = new PhpRenderer(__DIR__.'/../templates/');
 
 $entityManager = getEntityManager();
 
-$map->get('home','/', function ($request, $response) use ($view){
-    return $view->render($response,'home.phtml');
+$map->get('home', '/', function (ServerRequestInterface $request, $response) use ($view, $entityManager) {
+    $postsRepository = $entityManager->getRepository(Post::class);
+    $categoryRepository = $entityManager->getRepository(Category::class);
+    $categories = $categoryRepository->findAll();
+    $data = $request->getQueryParams();
+    if(isset($data['search']) and $data['search']!=""){
+        $queryBuilder = $postsRepository->createQueryBuilder('p');
+        $queryBuilder->join('p.categories', 'c')
+            ->where($queryBuilder->expr()->eq('c.id', $data['search']));
+        $posts = $queryBuilder->getQuery()->getResult();
+    }else{
+        $posts = $postsRepository->findAll();
+    }
+    return $view->render($response, 'home.phtml', [
+        'posts' => $posts,
+        'categories' => $categories
+    ]);
 });
 
 /**Rotas de categories**/
